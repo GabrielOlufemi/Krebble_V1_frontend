@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Krebble - User Settings</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caprasimo&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+      background: linear-gradient(135deg, #f1f5f8, #e8ddd0);
+      min-height: 100vh;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: background 0.3s;
+    }
+
+    body.dark { background: #06080b; }
+
+    .viewscreen_display { display: flex; flex-direction: column; justify-content: space-between; width: 100%; max-width: 1000px; }
+
+    .wrapper {
+      background: #fff;
+      border-radius: 15px;
+      padding: 24px;
+      box-shadow: 0 0px 40px rgba(0, 0, 0, 0.2);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    body.dark .wrapper {
+      background: #000000;
+      color: #e0e0e0;
+      box-shadow: 0px 0px 100px #6c6b6b6f;
+    }
+
+    .navbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid #e5e5e5; transition: border-color 0.3s; gap: 12px; flex-wrap: wrap; }
+
+    body.dark .navbar { border-bottom-color: #30363d; }
+
+    .brand { font-family: 'Caprasimo', cursive; font-size: 24px; color: #36281f; opacity: 0.9; transition: color 0.3s; white-space: nowrap; }
+
+    body.dark .brand { color: #e0e0e0; }
+
+    .nav-items { display: flex; gap: 16px; font-size: 12px; align-items: center; flex-wrap: wrap; margin-left: auto; }
+
+    .user-acct-btn { padding: 6px 12px; border: none; background: #f0f0f0; color: #666; font-size: 12px; border-radius: 6px; cursor: pointer; font-weight: 500; transition: all 0.2s; white-space: nowrap; display: flex; align-items: center; gap: 6px; }
+
+    body.dark .user-acct-btn { background: #444; color: #e0e0e0; }
+
+    .user-acct-btn:hover { background: #e0e0e0; }
+    body.dark .user-acct-btn:hover { background: #555; }
+
+    .settings_wrapper { padding: 8px 0; }
+    .section_title { font-size: 14px; font-weight: 600; color: #666; margin: 24px 0 12px 0; text-transform: uppercase; letter-spacing: 0.5px; }
+    body.dark .section_title { color: #8b949e; }
+    .section_title:first-child { margin-top: 0; }
+
+    .setting_panel {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 56px;
+      padding: 16px 20px;
+      border-radius: 10px;
+      background-color: 000000;
+      font-size: 15px;
+      font-weight: 500;
+      color: #36281f;
+      transition: all 0.2s;
+      cursor: pointer;
+      margin-bottom: 8px;
+      border: 1px solid transparent;
+    }
+
+    .setting_panel:hover { background-color: #e9ecef; border-color: #dee2e6; }
+    body.dark .setting_panel { background-color: #141414; color: #e0e0e0; }
+    body.dark .setting_panel:hover { background-color: #222222; border-color: #3a404a; }
+
+    .setting_panel svg { flex-shrink: 0; opacity: 0.5; transition: opacity 0.2s; }
+    .setting_panel:hover svg { opacity: 0.8; }
+
+    .setting_panel.delete { color: rgb(215, 73, 73); }
+    body.dark .setting_panel.delete { color: rgb(239, 108, 108); }
+
+    .theme_selector {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 20px;
+      border-radius: 10px;
+      background-color: #f8f9fa;
+      transition: all 0.3s;
+      border: 1px solid #e9ecef;
+    }
+
+    body.dark .theme_selector { background-color: #141414; border-color: #2d3340; }
+
+    .theme_selector_title { font-size: 15px; font-weight: 500; color: #36281f; margin-bottom: 8px; }
+    body.dark .theme_selector_title { color: #e0e0e0; }
+
+    .radio_group { display: flex; flex-direction: column; gap: 12px; }
+    .radio_option { display: flex; align-items: center; gap: 12px; cursor: pointer; padding: 8px 0; }
+
+    .radio_option input[type="radio"] { width: 18px; height: 18px; cursor: pointer; accent-color: #36281f; }
+    body.dark .radio_option input[type="radio"] { accent-color: #6b7280; }
+
+    .radio_option label { font-size: 14px; color: #495057; cursor: pointer; user-select: none; }
+    body.dark .radio_option label { color: #adb5bd; }
+
+    @media (max-width: 768px) { body { padding: 12px; } .wrapper { padding: 16px; } .navbar { margin-bottom: 16px; } .brand { font-size: 20px; } .nav-items { font-size: 11px; gap: 8px; } .user-acct-btn { padding: 5px 10px; font-size: 11px; } .section_title { font-size: 13px; } .setting_panel { padding: 14px 16px; font-size: 14px; } }
+
+    @media (max-width: 480px) { .wrapper { padding: 12px; } .navbar { margin-bottom: 12px; } .brand { font-size: 18px; } .user-acct-btn { padding: 4px 8px; font-size: 10px; } .section_title { font-size: 12px; } .setting_panel { padding: 12px 14px; font-size: 13px; } }
+  </style>
+</head>
+<body>
+  <div class="viewscreen_display">
+    <div class="wrapper">
+      <div class="navbar">
+        <div class="brand">Krebble.</div>
+        <div class="nav-items">
+          <button class="user-acct-btn" id="dashboard-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="20" x2="18" y2="10"></line>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+          </button>
+
+          <button class="user-acct-btn" id="user-acct">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </button>
+        </div>
+      </div>    
+
+      <div class="settings_wrapper">
+        <div class="section_title">Account</div>
+
+        <div class="setting_panel" id="account-info">
+          <div>Account Information</div>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </div>
+
+        <div class="setting_panel" id="update-sporty-details">
+          <div>Update Sporty Details</div>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </div>
+
+        <div class="setting_panel delete" id="delete-account">
+          <div>Delete Account</div>
+        </div>
+
+        <div class="section_title">General</div>
+
+        <div class="theme_selector">
+          <div class="theme_selector_title">Default Theme</div>
+          <div class="radio_group">
+            <div class="radio_option">
+              <input type="radio" id="light-theme" name="theme" value="light">
+              <label for="light-theme">Light Mode</label>
+            </div>
+            <div class="radio_option">
+              <input type="radio" id="dark-theme" name="theme" value="dark">
+              <label for="dark-theme">Dark Mode</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="section_title">Need Help?</div>
+
+        <div class="setting_panel" id="support">
+          <div>Support</div>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ===================== NAVIGATION HANDLERS =====================
+    document.getElementById("user-acct").onclick = () => { window.location.href = "user_settings.html"; }
+    document.getElementById("dashboard-btn").onclick = () => { window.location.href = "dashboard.html"; }
+
+    document.getElementById('account-info').onclick = () => { window.location.href = "account_information.html"; }
+    document.getElementById('update-sporty-details').onclick = () => { window.location.href = "update_sporty_details.html"; }
+    document.getElementById('delete-account').onclick = () => {
+        window.location.href = "delete_account.html";
+    }
+    document.getElementById('support').onclick = () => { window.location.href = "support.html"; }
+
+    // ===================== THEME HANDLING =====================
+
+    function getUserId() {
+      const userId = localStorage.getItem('user_id');
+      if(!userId){
+        throw new Error('User ID not found. sign in again');
+      }
+      return userId;
+    }
+
+    // Apply theme immediately from localStorage (no flash)
+    function applyStoredTheme() {
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      if (savedTheme === 'dark') {
+        document.body.classList.add('dark');
+        document.getElementById('dark-theme').checked = true;
+      } else {
+        document.getElementById('light-theme').checked = true;
+      }
+    }
+
+    // Fetch theme from DB and update localStorage if different
+    async function syncThemeFromDB() {
+      try {
+        const userId = getUserId();
+        const response = await fetch(`http://127.0.0.1:8000/user/general/${userId}`);
+        const data = await response.json();
+        
+        const dbTheme = data.theme || 'light';
+        const localTheme = localStorage.getItem('theme');
+        
+        // If DB theme is different from local, update
+        if (dbTheme !== localTheme) {
+          localStorage.setItem('theme', dbTheme);
+          if (dbTheme === 'dark') {
+            document.body.classList.add('dark');
+            document.getElementById('dark-theme').checked = true;
+          } else {
+            document.body.classList.remove('dark');
+            document.getElementById('light-theme').checked = true;
+          }
+        }
+      } catch (err) {
+        console.error("Error fetching theme:", err);
+      }
+    }
+
+    // Apply theme instantly, then sync with DB
+    applyStoredTheme();
+    syncThemeFromDB();
+
+    // Update theme in localStorage AND database
+    document.querySelectorAll('input[name="theme"]').forEach(radio => {
+      radio.addEventListener('change', async (e) => {
+        const theme = e.target.value;
+        
+        // Update UI immediately
+        if (theme === 'dark') {
+          document.body.classList.add('dark');
+        } else {
+          document.body.classList.remove('dark');
+        }
+        
+        // Save to localStorage (instant)
+        localStorage.setItem('theme', theme);
+        
+        // Save to database (background)
+        try {
+          const userId = getUserId();
+          await fetch(`http://127.0.0.1:8000/api/user/general/${userId}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ theme })
+          });
+        } catch (err) {
+          console.error("Error saving theme:", err);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

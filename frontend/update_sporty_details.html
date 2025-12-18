@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Krebble - Update Sporty Details</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caprasimo&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+      background: linear-gradient(135deg, #f1f5f8, #e8ddd0);
+      min-height: 100vh;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: background 0.3s;
+    }
+
+    body.dark { background: #06080b; }
+
+    .viewscreen_display {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .wrapper {
+      background: #fff;
+      border-radius: 15px;
+      padding: 0;
+      box-shadow: 0 0px 40px rgba(0, 0, 0, 0.2);
+      transition: background 0.3s, color 0.3s;
+      overflow: hidden;
+    }
+
+    body.dark .wrapper {
+      background: #000000;
+      color: #e0e0e0;
+      box-shadow: 0px 0px 100px #6c6b6b6f;
+    }
+
+
+    .navbar {
+      display: flex;
+      align-items: center;
+      padding: 16px 20px;
+      border-bottom: 1px solid #e5e5e5;
+      transition: border-color 0.3s;
+      gap: 16px;
+    }
+
+    body.dark .navbar { border-bottom-color: #30363d; }
+
+    .back-btn {
+      padding: 8px;
+      border: none;
+      background: transparent;
+      color: #36281f;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+
+    .back-btn:hover {
+      background: #f0f0f0;
+    }
+
+    body.dark .back-btn {
+      color: #e0e0e0;
+    }
+
+    body.dark .back-btn:hover {
+      background: #2d3340;
+    }
+
+    .page-header {
+      flex: 1;
+      text-align: center;
+      margin-right: 32px;
+    }
+
+    .page-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #36281f;
+      margin-bottom: 2px;
+    }
+
+    body.dark .page-title {
+      color: #e0e0e0;
+    }
+
+    .page-subtitle {
+      font-size: 13px;
+      color: #8b949e;
+      font-weight: 400;
+    }
+
+    body.dark .page-subtitle {
+      color: #6b7280;
+    }
+
+    .form-wrapper {
+      padding: 24px 20px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 15px;
+      font-weight: 600;
+      color: #36281f;
+      margin-bottom: 8px;
+    }
+
+    body.dark .form-label {
+      color: #e0e0e0;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 8px;
+      border: 1px solid #e5e5e5;
+      background: #fff;
+      font-size: 15px;
+      color: #36281f;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .form-input::placeholder {
+      color: #adb5bd;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: #36281f;
+    }
+
+    body.dark .form-input {
+      background: #141414;
+      border-color: #30363d;
+      color: #e0e0e0;
+    }
+
+    body.dark .form-input::placeholder {
+      color: #6b7280;
+    }
+
+    body.dark .form-input:focus {
+      border-color: #6b7280;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: #36281f;
+      color: white;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 8px;
+    }
+
+    .submit-btn:hover {
+      background: #4a3629;
+    }
+
+    body.dark .submit-btn {
+      background: #296633;
+    }
+
+    body.dark .submit-btn:hover {
+      background: #247f33;
+    }
+
+    .submit-btn:active {
+      transform: scale(0.98);
+    }
+
+    @media (max-width: 768px) {
+      body { padding: 12px; }
+      .viewscreen_display { max-width: 100%; }
+      .navbar { padding: 14px 16px; }
+      .page-title { font-size: 17px; }
+      .page-subtitle { font-size: 12px; }
+      .form-wrapper { padding: 20px 16px; }
+      .form-input { padding: 11px 14px; font-size: 14px; }
+      .submit-btn { padding: 11px; font-size: 14px; }
+    }
+
+    @media (max-width: 480px) {
+      .navbar { padding: 12px 14px; }
+      .page-title { font-size: 16px; }
+      .form-wrapper { padding: 18px 14px; }
+      .form-input { padding: 10px 12px; font-size: 14px; }
+      .submit-btn { padding: 10px; font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="viewscreen_display">
+    <div class="wrapper">
+      <div class="navbar">
+        <button class="back-btn" id="back-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+
+        <div class="page-header">
+          <div class="page-title">Update Sporty Details</div>
+          <div class="page-subtitle" id="username-subtitle">@maybeeSaint</div>
+        </div>
+      </div>    
+      
+      <div class="form-wrapper">
+
+        <div class="form-group">
+          <label class="form-label">New password</label>
+          <input  type="password" class="form-input" id="new-sporty-password" placeholder="input new password">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Confirm password</label>
+          <input  class="form-input" id="confirm-sporty-password" placeholder="confirm updated password">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">New Phone Number</label>
+          <input type="text" class="form-input" id="new-phone-no" placeholder="input new phone number e.g. 09060000000">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Confirm Phone Number</label>
+          <input type="text" class="form-input" id="confirm-phone-no" placeholder="confirm updated phone number">
+        </div>
+
+        <button class="submit-btn" id="submit-btn">Update Details</button>
+      </div>
+        
+    </div>
+  </div>
+
+  <script>
+    // ===================== THEME HANDLING =====================
+    
+    function getUserId() {
+      const userId = localStorage.getItem('user_id');
+      if(!userId){
+        throw new Error('User ID not found. sign in again');
+      }
+      return userId;
+    }
+
+    // Apply theme immediately from localStorage (no flash)
+    function applyStoredTheme() {
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      if (savedTheme === 'dark') {
+        document.body.classList.add('dark');
+      } else {
+        document.body.classList.remove('dark');
+      }
+    }
+
+    // Fetch theme from DB and update localStorage if different
+    async function syncThemeFromDB() {
+      try {
+        const userId = getUserId();
+        const response = await fetch(`http://127.0.0.1:8000/user/general/${userId}`);
+        const data = await response.json();
+        
+        const dbTheme = data.theme || 'light';
+        const localTheme = localStorage.getItem('theme');
+        
+        document.getElementById('username-subtitle').textContent = `@${data.username}`;
+        
+        // If DB theme is different from local, update
+        if (dbTheme !== localTheme) {
+          localStorage.setItem('theme', dbTheme);
+          if (dbTheme === 'dark') {
+            document.body.classList.add('dark');
+          } else {
+            document.body.classList.remove('dark');
+          }
+        }
+      } catch (err) {
+        console.error("Error syncing theme:", err);
+      }
+    }
+
+    // Apply theme instantly, then sync with DB
+    applyStoredTheme();
+    syncThemeFromDB();
+
+    // ===================== NAVIGATION HANDLERS =====================
+    
+    document.getElementById("back-btn").onclick = () => {
+      window.location.href = "user_settings.html";
+    }
+
+    // ===================== FORM SUBMISSION =====================
+    
+    document.getElementById("submit-btn").onclick = async () => {
+      const newSportyPassword = document.getElementById('new-sporty-password').value;
+      const confirmSportyPassword = document.getElementById('confirm-sporty-password').value;
+     
+      const newPhoneNo = document.getElementById('new-phone-no').value;
+      const confirmPhoneNo = document.getElementById('confirm-phone-no').value;
+
+      // Validation
+      if (!newSportyPassword || !confirmSportyPassword || !newPhoneNo || !confirmPhoneNo) {
+        alert('Please fill in all fields');
+        return;
+      }
+
+      if (newSportyPassword !== confirmSportyPassword) {
+        alert('New passwords do not match');
+        return;
+      }
+
+      if (newPhoneNo !== confirmPhoneNo) {
+        alert('Phone Numbers do not match');
+        return;
+      }
+
+      //PHONE NUMBER FORMAT VALIDATION
+      const phoneRegex = /^0\d{10}$/; // Starts with 0, followed by exactly 10 digits
+      if (!phoneRegex.test(newPhoneNo)) {
+        alert('Please enter a valid 11-digit phone number starting with 0 (e.g., 09060000000)');
+        return;
+      }
+
+      // SEND TO BACKEND
+      try {
+        const userId = getUserId();
+        const response = await fetch(`http://127.0.0.1:8000/update-sporty-details/${userId}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({    
+            new_sporty_password: newSportyPassword,
+            new_phone_number: newPhoneNo
+          }),
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          alert('Sporty details updated successfully!');
+          window.location.href = "dashboard.html";
+        } else {
+          alert(result.detail || 'Failed to update details');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error updating sporty details');
+      }
+    };
+  </script>
+</body>
+</html>

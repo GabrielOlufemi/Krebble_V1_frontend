@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>details</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+ 
+
+ <style>
+    /* Reset some default browser styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      background: linear-gradient(135deg, #f1f5f8, #36281f9c);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .viewscreen_display {
+      display:flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .details_panel_container {
+      background: #fff;
+      padding: 40px 30px;
+      border-radius: 15px;
+      width: 380px;
+      box-shadow: 0 0px 40px rgba(0, 0, 0, 0.4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .phone_number_wrapper {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo_sms {
+      font-size: 15px;
+      color: #333;
+      padding-bottom: 2px; /* fine-tune if needed */
+    }
+
+    .phone_number_wrapper input {
+      flex: 1;
+      padding: 10px 0px;
+      border: none;
+      border-bottom: 2px solid gray;
+      outline: none;
+      font-size: 15px;
+      transition: border-color 0.3s ease;
+    }
+
+    .logo_sms {
+      font-size: 16px;
+      color: #666;  /* Match placeholder color */
+      padding-bottom: 0px;  /* Remove the padding */
+      font-family: inherit;  /* Use same font as input */
+    }
+
+    .logo_panel {
+      text-align: center;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+      min-width: 270px;
+      margin-bottom: 16px;
+    }
+
+    /* .logo_panel img{
+      width: 30px;
+      height: 30px;
+      margin-right: 5px;
+    } */
+
+    .logo_panel div{
+      color: #36281f;
+      opacity: 0.9;
+      font-family: 'Caprasimo', cursive;   /* main font */
+      font-size:30px;
+    }
+
+    .details_panel_header {
+      min-width: 270px;
+      max-width: 270px;
+      text-align: left;
+      margin-bottom: 25px;
+    }
+
+    .details_panel_header h1 {
+      font-size: 28px;
+      color: #36281f;  
+      opacity: 0.9;
+      margin-bottom: 8px;
+    }
+
+    .details_panel_header div {
+      font-size: 15px;
+      color: #666;
+    }
+
+    .details_form {
+      min-width:270px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .form_group {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+      min-width: 270px;
+    }
+
+    .form_group label {
+      margin-bottom: 6px;
+      font-size: 14px;
+      color: #36281f;  
+      opacity: 0.9;
+      font-weight: 500;
+    }
+
+    .form_group input {
+      padding: 10px 0px;
+      border: none;
+      border-bottom: 2px solid gray;
+      outline:none;
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    .form_group input:focus {
+      box-shadow: none;
+      border-bottom-color: black;
+    }
+
+    .details_btn {
+      background: #36281f;
+      color: white;
+      border: none;
+      width:200px;
+      margin-top:4px;
+      padding: 12px;
+      border-radius: 7px;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      transition:all 0.2s ease;
+    }
+
+    .details_btn:hover {
+      opacity: 0.9;
+      background-color:#36281f;
+    }
+
+    .forgot_password {
+      display: flex;
+      width: 100%;
+      justify-content: flex-end;
+      margin-top: 10px;
+    }
+
+    .forgot_password a {
+      font-size: 15px;
+      color: gray;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .forgot_password a:hover {
+      color: black;
+      cursor: pointer;
+    }
+
+    .creator_link {
+      margin-top: 12px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .creator_link a{
+      font-size: 16px;
+      color: rgb(76, 76, 76);
+      text-decoration: none;
+      transition: color 0.2s ease;
+      padding: 0px 5px;
+    }
+
+    .creator_link a:hover {
+      color:black;
+      cursor:pointer;
+    }
+
+  </style>
+</head>
+<body>
+  
+<!-- Main container -->
+ 
+<div class = "viewscreen_display">
+
+  <div class="details_panel_container">
+
+    <div class = "logo_panel">
+      <div>Krebble.</div>
+    </div>
+
+    <div class="details_panel_header">
+      <h1>Grant Access</h1>
+      <div>
+        Provide your Sporty login details 
+        <!-- <br>Account details will not be misused -->
+      </div>
+    </div>
+
+    <div class="details_panel">
+      
+      <!-- details form -->
+      <form action="#" method="post" class="sporty_details_form details_form">
+        
+        <!-- Email or Username -->
+
+          <div class="form_group">
+            <label for="phone_number">Phone Number</label>
+            <div class="phone_number_wrapper">
+              <div class="logo_sms">+234</div>
+              <input type="text" id="phone_number" name="phone_number" placeholder="Enter your Phone Number" required>
+            </div>
+          </div>
+
+        <!-- Password -->
+        <div class="form_group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="Enter your password" required>
+        </div>
+
+        <!-- Submit button -->
+        <button type="submit" class="details_btn">Proceed</button>
+
+      </form>
+    </div>
+
+  </div>
+
+  <div class = "creator_link">
+    <a href="https://x.com/maybeeGabriel" target = "_blank" rel = "noopener">@maybeeGabriel</a>
+  </div>
+
+</div>
+
+<script>
+  const form = document.querySelector(".sporty_details_form");
+  form.addEventListener("submit", handleBetDetails)
+
+  async function handleBetDetails(){
+
+    event.preventDefault();
+
+    let phone_number = document.querySelector("#phone_number").value
+    const sporty_password = document.querySelector("#password").value
+
+    // VALIDATION: Phone number must contain only digits
+    if (!/^\d+$/.test(phone_number)) {
+      alert("Phone number must contain only numbers");
+      return;
+    }
+
+    // VALIDATION: If starts with 0, remove it (expecting 10 digits after)
+    if (phone_number.startsWith('0')) {
+      phone_number = phone_number.substring(1);
+    }
+
+    // VALIDATION: Phone number must be exactly 10 digits after processing
+    if (phone_number.length !== 10) {
+      alert("Phone number must be 10 digits (or 11 if it starts with 0)");
+      return;
+    }
+
+    const userId = localStorage.getItem("user_id");
+    const response = await fetch("http://127.0.0.1:8000/register-sporty-details/" + userId, {
+      method : "POST",
+      headers : {
+        "Content-Type" : "application/json"
+      },
+      body : JSON.stringify({
+        phone_number,
+        sporty_password
+      })
+    });
+
+    const result = await response.json();
+    console.log(result);
+
+    if (response.ok) {
+      console.log("User ID:", userId);
+      console.log("message", result.message)
+      console.log("modified_users", result.modified)
+
+      //redirect to dashboard
+      window.location.href = "dashboard.html"
+
+    } else {
+      alert(result.detail || "")
+    }
+  }
+
+
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,141 @@
+Perfect! Let me break down the entire structure of this page:
+
+## **Page Structure Breakdown**
+
+### **1. HTML Structure (The Skeleton)**
+```
+Container (main white box)
+├── Top Navigation Bar
+│   ├── Logo (Krebble.)
+│   └── Nav Links (Dashboard, Logout)
+│
+├── Header Section
+│   ├── Left Side
+│   │   ├── Title ("Performance")
+│   │   └── Subtitle ("Last 20 bets")
+│   └── Right Side
+│       └── Time Buttons (6H, 1D, 1W, 1M, ALL, ↻ Refresh)
+│
+├── Status Message (hidden by default, shows when syncing)
+│
+├── Main Stats Section
+│   ├── Large P&L Number (₦35,000 or -₦57,000)
+│   └── Percentage Change (↑ 63.1% or ↓ 63.1%)
+│
+├── Chart Section
+│   └── Canvas for Chart.js to draw the graph
+│
+└── Footer Info
+    ├── Total Volume (₦89,865 total volume)
+    └── Legend (Green dot = Win, Red dot = Loss, Gray dot = Void)
+```
+
+---
+
+### **2. CSS Styling (The Look)**
+- **Background**: Gradient blue/brown
+- **Container**: White box with shadow
+- **Colors**:
+  - Green (#10b981) = Wins/Positive
+  - Red (#ef4444) = Losses/Negative
+  - Gray (#a0aec0) = Voids
+  - Dark Brown (#36281f) = Krebble branding
+
+---
+
+### **3. JavaScript Logic (The Brain)**
+
+**Step 1: Get the Data**
+```javascript
+const bets = [ /* array of bet objects from MongoDB */ ]
+```
+
+**Step 2: Process the Data**
+```javascript
+let cumPL = 0;  // Running total
+const data = bets.map((b, i) => {
+  cumPL += b.realized_profit;  // Add to running total
+  // Determine if Win/Loss/Void
+  // Return object with: x, y, color, status
+});
+```
+
+**Step 3: Calculate Totals**
+```javascript
+const totalPL = cumPL;  // Final P&L
+const totalStake = sum of all amounts
+const changePercent = (totalPL / totalStake) * 100
+```
+
+**Step 4: Update Display**
+```javascript
+document.getElementById('totalPL').textContent = '₦' + totalPL;
+document.getElementById('changePercent').textContent = changePercent + '%';
+```
+
+**Step 5: Create the Chart**
+```javascript
+new Chart(canvas, {
+  type: 'line',
+  data: { labels, datasets },
+  options: { scales, plugins }
+});
+```
+
+**Step 6: Add Interactions**
+- **Time buttons**: Switch between time ranges (currently static)
+- **Refresh button**: Calls `/scrape/{userId}` API to sync new data
+- **Hover tooltips**: Show bet details when hovering dots
+
+---
+
+### **4. Data Flow**
+
+```
+MongoDB Data
+    ↓
+Extract last 20 bets (amount, payout, realized_profit, status)
+    ↓
+Process each bet:
+  - Calculate cumulative P&L
+  - Determine Win/Loss/Void color
+  - Build chart data points
+    ↓
+Calculate totals (total P&L, total stake, percentage)
+    ↓
+Update HTML values (display numbers)
+    ↓
+Draw chart with colored dots
+    ↓
+Add interactions (buttons, tooltips, refresh)
+```
+
+---
+
+### **5. Key Variables Explained**
+
+| Variable | What It Does | Example |
+|----------|-------------|---------|
+| `bets` | Array of all bet objects | `[{amount: 5000, payout: 4900, ...}]` |
+| `cumPL` | Running total of profit/loss | -5000, -10000, -15000, etc. |
+| `data` | Processed bets ready for chart | `[{x: 1, y: -100, color: '#ef4444'}]` |
+| `totalPL` | Final P&L after all bets | ₦35,000 or -₦57,000 |
+| `color` | Dot color based on status | '#10b981' (green), '#ef4444' (red), etc. |
+
+---
+
+### **6. What Happens When You Click Refresh**
+
+```
+1. Get user_id from localStorage
+2. Fetch /scrape/{userId} from backend
+3. Show "Syncing data..." message
+4. Backend scrapes Sporty bets
+5. Backend returns new data
+6. Show "✓ Data synced successfully"
+7. Reload page to show new chart
+```
+
+---
+
+Does this help clarify things? Which part would you like me to explain deeper?

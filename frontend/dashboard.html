@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Krebble - Performance Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caprasimo&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+      min-height: 100vh;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: background 0.3s;
+    }
+
+    body.dark { background: #06080b; }
+
+    .viewscreen_display {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 1000px;
+    }
+
+    .wrapper {
+      background: #fff;
+      border-radius: 15px;
+      padding: 24px;
+      box-shadow: 0 0px 40px rgb(100, 100, 100);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    body.dark .wrapper {
+      background: #000000;
+      color: #e0e0e0;
+      box-shadow: 0px 0px 100px #6c6b6b6f;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #e5e5e5;
+      transition: border-color 0.3s;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    body.dark .navbar { border-bottom-color: #30363d; }
+
+    .brand {
+      font-family: 'Caprasimo', cursive;
+      font-size: 24px;
+      color: #36281f;
+      opacity: 0.9;
+      transition: color 0.3s;
+      white-space: nowrap;
+    }
+
+    body.dark .brand { color: #e0e0e0; }
+
+    .nav-items {
+      display: flex;
+      gap: 16px;
+      font-size: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-left: auto;
+    }
+
+    .nav-items span {
+      color: #36281f;
+      font-weight: 600;
+    }
+
+    body.dark .nav-items span { color: #e0e0e0; }
+
+    .user-acct-btn {
+      padding: 6px 12px;
+      border: none;
+      background: #f0f0f0;
+      color: #666;
+      font-size: 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    body.dark .user-acct-btn {
+      background: #444;
+      color: #e0e0e0;
+    }
+
+    .user-acct-btn:hover {
+      background: #e0e0e0;
+    }
+
+    body.dark .user-acct-btn:hover {
+      background: #555;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 24px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .header-left h1 {
+      font-size: 24px;
+      color: #36281f;
+      margin-bottom: 4px;
+      font-weight: 600;
+      transition: color 0.3s;
+    }
+
+    body.dark .header-left h1 { color: #e0e0e0; }
+
+    .header-left p {
+      color: #999;
+      font-size: 12px;
+    }
+
+    .header-right {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      padding: 6px 10px;
+      border: none;
+      background: #f0f0f0;
+      color: #666;
+      font-size: 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      min-width: 32px;
+      text-align: center;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    body.dark .btn {
+      background: #444;
+      color: #e0e0e0;
+    }
+
+    body.dark .btn:hover:not(:disabled) {
+      background: #555;
+    }
+
+    .btn:hover:not(:disabled) {
+      background: #e0e0e0;
+    }
+
+    .btn.active {
+      background: #36281f;
+      color: #fff;
+    }
+
+    .btn.active:hover {
+      background: #36281f;
+    }
+
+    .btn.refresh {
+      background: #d3d3d3;
+      margin-left: 4px;
+      flex-shrink: 0;
+    }
+
+    .btn.refresh:hover:not(:disabled) {
+      background: #c0c0c0;
+    }
+
+    .stats {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .stat-value {
+      font-size: 36px;
+      font-weight: 700;
+      color: #10b981;
+    }
+
+    .stat-value.negative { color: #ef4444; }
+
+    .stat-change {
+      font-size: 13px;
+      color: #10b981;
+      background: rgba(16, 185, 129, 0.1);
+      padding: 4px 8px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    .stat-change.negative {
+      color: #ef4444;
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    .chart-box {
+      position: relative;
+      height: 300px;
+      margin-bottom: 20px;
+      border-radius: 12px;
+      padding: 16px;
+      background: linear-gradient(180deg, transparent 0%, rgba(16, 185, 129, 0.1) 100%);
+      transition: background 0.3s;
+    }
+
+    .chart-box.negative {
+      background: linear-gradient(180deg, transparent 0%, rgba(239, 68, 68, 0.1) 100%);
+    }
+
+    body.dark .chart-box {
+      background: linear-gradient(180deg, transparent 0%, rgba(16, 185, 129, 0.08) 100%);
+    }
+
+    body.dark .chart-box.negative {
+      background: linear-gradient(180deg, transparent 0%, rgba(239, 68, 68, 0.08) 100%);
+    }
+
+    .status {
+      display: none;
+      color: #10b981;
+      font-size: 12px;
+      margin-bottom: 12px;
+      padding: 8px 12px;
+      background: rgba(16, 185, 129, 0.1);
+      border-radius: 4px;
+    }
+
+    .status.error {
+      color: #ef4444;
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 16px;
+      border-top: 1px solid #f0f0f0;
+      color: #999;
+      font-size: 12px;
+      gap: 12px;
+      flex-wrap: wrap;
+      transition: border-color 0.3s;
+    }
+
+    body.dark .footer {
+      border-top-color: #30363d;
+      color: #8b949e;
+    }
+
+    .legend {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .dot-win { background: #10b981; }
+    .dot-loss { background: #ef4444; }
+    .dot-void { background: #a0aec0; }
+
+    .data-btn {
+      padding: 6px 12px;
+      border: none;
+      background: #f0f0f0;
+      color: #666;
+      font-size: 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    body.dark .data-btn {
+      background: #444;
+      color: #e0e0e0;
+    }
+
+    body.dark .data-btn:hover:not(.active) {
+      background: #555;
+    }
+
+    .data-btn:hover:not(.active) {
+      background: #e0e0e0;
+    }
+
+    .data-btn.active {
+      background: #36281f;
+      color: #fff;
+    }
+
+    .data-btn.active:hover {
+      background: #36281f;
+    }
+
+    .creator_link {
+      margin-top: 12px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .creator_link a {
+      font-size: 12px;
+      color: rgb(76, 76, 76);
+      text-decoration: none;
+      transition: color 0.2s ease;
+      padding: 0px 5px;
+    }
+
+    .creator_link a:hover {
+      color: black;
+      cursor: pointer;
+    }
+
+    body.dark .creator_link a {
+      color: #8b949e;
+    }
+
+    body.dark     .creator_link a:hover {
+      color: #e0e0e0;
+    }
+
+    .bet-list {
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid #f0f0f0;
+    }
+
+    body.dark .bet-list {
+      border-top-color: #30363d;
+    }
+
+    .bet-list h2 {
+      font-size: 18px;
+      margin-bottom: 16px;
+      color: #36281f;
+      font-weight: 600;
+    }
+
+    body.dark .bet-list h2 {
+      color: #e0e0e0;
+    }
+
+    .bet-cards {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .bet-card {
+      background: #f8f8f8;
+      border-radius: 8px;
+      padding: 12px;
+      transition: all 0.2s;
+      border-left: 3px solid transparent;
+      cursor: pointer;
+    }
+
+    body.dark .bet-card {
+      background: #1a1a1a;
+    }
+
+    .bet-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    body.dark .bet-card:hover {
+      box-shadow: 0 4px 12px rgba(255, 255, 255, 0.05);
+    }
+
+    .bet-card.won {
+      border-left-color: #10b981;
+    }
+
+    .bet-card.lost {
+      border-left-color: #ef4444;
+    }
+
+    .bet-card.void {
+      border-left-color: #a0aec0;
+    }
+
+    .bet-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .bet-status {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    .bet-status.won {
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+    }
+
+    .bet-status.lost {
+      background: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+    }
+
+    .bet-status.void {
+      background: rgba(160, 174, 192, 0.15);
+      color: #a0aec0;
+    }
+
+    .bet-date {
+      font-size: 11px;
+      color: #999;
+    }
+
+    .bet-type {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 8px;
+    }
+
+    body.dark .bet-type {
+      color: #8b949e;
+    }
+
+    .bet-amounts {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .bet-amount-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+    }
+
+    .bet-amount-label {
+      color: #999;
+    }
+
+    .bet-amount-value {
+      font-weight: 600;
+      color: #36281f;
+    }
+
+    body.dark .bet-amount-value {
+      color: #e0e0e0;
+    }
+
+    .bet-profit {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid #e5e5e5;
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    body.dark .bet-profit {
+      border-top-color: #30363d;
+    }
+
+    .bet-profit.positive {
+      color: #10b981;
+    }
+
+    .bet-profit.negative {
+      color: #ef4444;
+    }
+
+    .bet-profit.neutral {
+      color: #a0aec0;
+    }
+
+    .no-bets {
+      text-align: center;
+      padding: 40px 20px;
+      color: #999;
+      font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+      body { padding: 12px; }
+      .wrapper { padding: 16px; }
+      .navbar { margin-bottom: 16px; }
+      .brand { font-size: 20px; }
+      .nav-items { font-size: 11px; gap: 8px; }
+      .header { margin-bottom: 16px; flex-direction: column; }
+      .header-left h1 { font-size: 20px; }
+      .header-right { width: 100%; justify-content: flex-start; flex-wrap: wrap; }
+      .chart-box { height: 220px; padding: 12px; }
+      .stat-value { font-size: 28px; }
+      .stats { margin-bottom: 16px; gap: 8px; }
+      .footer { flex-direction: column; align-items: flex-start; gap: 8px; }
+      .legend { width: 100%; gap: 10px; }
+      .data-btn { width: 100%; margin-top: 8px; }
+      .btn { padding: 5px 8px; font-size: 11px; }
+      .user-acct-btn { padding: 5px 10px; font-size: 11px; }
+    }
+
+    @media (max-width: 480px) {
+      .wrapper { padding: 12px; }
+      .navbar { margin-bottom: 12px; }
+      .brand { font-size: 18px; }
+      .header-left h1 { font-size: 18px; }
+      .chart-box { height: 180px; }
+      .stat-value { font-size: 24px; }
+      .legend-item { font-size: 11px; }
+      .btn { padding: 4px 8px; font-size: 10px; min-width: 28px; }
+      .user-acct-btn { padding: 4px 8px; font-size: 10px; }
+      .data-btn { font-size: 11px; padding: 5px 10px; }
+      .status { font-size: 11px; }
+      .header-left p { font-size: 11px; }
+    }
+
+    @media (max-width: 768px) {
+      /* ... your existing mobile styles ... */
+      
+      .bet-cards {
+        grid-template-columns: 1fr; /* Single column on mobile */
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="viewscreen_display">
+    <div class="wrapper">
+      <div class="navbar">
+        <div class="brand">Krebble.</div>
+        <div class="nav-items">
+          <button class="user-acct-btn" id="dashboard-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="20" x2="18" y2="10"></line>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+          </button>
+
+          <button class="user-acct-btn" id="user-acct">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="header">
+        <div class="header-left">
+          <h1 id="username">Loading...</h1>
+          <p id="count">Last X bets</p>
+        </div>
+        <div class="header-right">
+          <button class="btn" data-d="1">1D</button>
+          <button class="btn" data-d="7">1W</button>
+          <button class="btn active" data-d="30">1M</button>
+          <button class="btn refresh" id="sync">↻</button>
+        </div>
+      </div>
+
+      <div id="status" class="status">Syncing data...</div>
+
+      <div class="stats">
+        <div class="stat-value" id="pl">Loading...</div>
+        <div class="stat-change" id="pct">↓ 0.00%</div>
+      </div>
+
+      <div class="chart-box" id="box">
+        <canvas id="chart"></canvas>
+      </div>
+
+      <div class="footer">
+        <div id="vol">Loading...</div>
+        <!-- <div class="legend">
+          <div class="legend-item"><div class="dot dot-win"></div><span>Win</span></div>
+          <div class="legend-item"><div class="dot dot-loss"></div><span>Loss</span></div>
+          <div class="legend-item"><div class="dot dot-void"></div><span>Void</span></div>
+        </div>
+        <button class="data-btn" id="dots">Show Data Points</button> -->
+      </div>
+
+      <!-- ADD THIS SECTION -->
+      <div class="bet-list">
+        <h2>Bet History</h2>
+        <div class="bet-cards" id="bet-cards-container">
+          <div class="no-bets">Loading bets...</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="creator_link">
+      <a href="https://x.com/maybeeGabriel" target="_blank" rel="noopener">@maybeeGabriel</a>
+    </div>
+  </div>
+
+  <script>
+    let bets = [], filter = 30, working = false, showDots = false;
+
+    // Apply theme from localStorage immediately
+    function applyStoredTheme() {
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      if (savedTheme === 'dark') {
+        document.body.classList.add('dark');
+      }
+    }
+
+    // Apply theme instantly on load
+    applyStoredTheme();
+
+    // load bets for user id
+    async function load() {
+      const id = localStorage.getItem('user_id');
+      if (!id) return alert('user_id not found'), null;
+      try {
+        const r = await fetch(`http://127.0.0.1:8000/bets/${id}`);
+        return (await r.json()).bets;
+      } catch (e) {
+        alert('Failed to load');
+        return null;
+      }
+    }
+
+    async function loadUsername() {
+      const id = localStorage.getItem('user_id');
+      if (!id) return alert('user_id not found');
+
+      try {
+        const response = await fetch(`http://127.0.0.1:8000/user/general/${id}`);
+        const data = await response.json();
+
+        document.querySelector('.header-left h1').textContent = 'Welcome, ' + data.username;
+
+        // Sync theme from backend
+        const dbTheme = data.theme || 'light';
+        const localTheme = localStorage.getItem('theme');
+        
+        if (dbTheme !== localTheme) {
+          localStorage.setItem('theme', dbTheme);
+          if (dbTheme === 'dark') {
+            document.body.classList.add('dark');
+          } else {
+            document.body.classList.remove('dark');
+          }
+        }
+
+      } catch (e) {
+        alert('Failed to load user data');
+      }
+    }
+
+    function parse(s) {
+      const [d, m] = s.split(' ');
+      let y = new Date().getFullYear();
+      let dt = new Date(`${m} ${d}, ${y}`);
+      if (dt > new Date()) dt.setFullYear(y - 1);
+      return dt;
+    }
+
+    function render(data) {
+      if (!data.length) {
+        document.getElementById('pl').textContent = 'No data';
+        document.getElementById('count').textContent = '0 bets';
+        if (window.ch) window.ch.destroy();
+        renderBetCards([]);
+        return;
+      }
+
+      document.getElementById('count').textContent = `Last ${data.length} bets`;
+
+      // Reverse data so oldest bets come first (for proper chronological cumulative P&L)
+      const reversedData = [...data].reverse();
+
+      let cum = 0;
+      const pts = reversedData.map((b, i) => {
+        cum += b.realized_profit;
+        let st = 'loss', col = '#ef4444';
+        if (b.status === 'Void' || b.amount === b.payout) {
+          st = 'void';
+          col = '#a0aec0';
+        } else if (b.realized_profit > 0) {
+          st = 'win';
+          col = '#10b981';
+        }
+        return { y: cum, p: b.realized_profit, a: b.amount, o: b.payout, st, col };
+      });
+
+      const pl = pts[pts.length - 1].y;
+      const tot = reversedData.reduce((s, b) => s + b.amount, 0);
+      const pct = ((pl / tot) * 100).toFixed(2);
+
+      document.getElementById('pl').textContent = '₦' + pl.toLocaleString();
+      document.getElementById('pl').classList.toggle('negative', pl < 0);
+      document.getElementById('pct').textContent = (pl >= 0 ? '↑' : '↓') + ' ' + Math.abs(pct) + '%';
+      document.getElementById('pct').classList.toggle('negative', pl < 0);
+      document.getElementById('vol').textContent = '₦' + tot.toLocaleString() + ' total volume';
+      document.getElementById('box').classList.toggle('negative', pl < 0);
+
+      if (window.ch) window.ch.destroy();
+
+      const dark = document.body.classList.contains('dark');
+      const line = pl >= 0 ? '#10b981' : '#ef4444';
+      const bg = pl >= 0 ? 'rgba(16, 185, 129, 0.08)' : 'rgba(239, 68, 68, 0.08)';
+      const lc = dark ? (pl >= 0 ? 'rgba(16, 185, 129, 0.6)' : 'rgba(239, 68, 68, 0.6)') : line;
+
+      window.ch = new Chart(document.getElementById('chart'), {
+        type: 'line',
+        data: {
+          labels: pts.map((_, i) => i + 1),
+          datasets: [{
+            data: pts.map(d => d.y),
+            borderColor: lc,
+            backgroundColor: bg,
+            borderWidth: 2,
+            tension: 0.35,
+            pointRadius: showDots ? 4 : 0,
+            pointBackgroundColor: pts.map(d => d.col),
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            pointHoverRadius: showDots ? 6 : 0
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: 'rgba(0, 0, 0, 0.85)',
+              padding: 12,
+              titleFont: { size: 13, weight: 'bold' },
+              bodyFont: { size: 12 },
+              cornerRadius: 6,
+              displayColors: false,
+              callbacks: {
+                title: ctx => 'P&L: ₦' + pts[ctx[0].dataIndex].y.toLocaleString(),
+                label: ctx => {
+                  const d = pts[ctx.dataIndex];
+                  return [
+                    'Stake: ₦' + d.a.toLocaleString(),
+                    'Payout: ₦' + (d.p > 0 ? (d.p + d.a).toLocaleString() : '0'),
+                    'Status: ' + d.st.toUpperCase()
+                  ];
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              min: Math.min(0, ...pts.map(d => d.y)) - 5000,
+              max: Math.max(0, ...pts.map(d => d.y)) + 5000,
+              ticks: { color: '#999', callback: v => '₦' + (v / 1000).toFixed(0) + 'k' },
+              grid: { color: dark ? 'rgba(255, 255, 255, 0.01)' : '#f5f5f5', drawBorder: false, display: !dark }
+            },
+            x: { ticks: { display: false }, grid: { display: false, drawBorder: false } }
+          }
+        }
+      });
+
+      // Render bet cards (show newest first for bet history)
+      renderBetCards(data);
+
+      working = false;
+    }
+
+    function renderBetCards(bets) {
+      const container = document.getElementById('bet-cards-container');
+      
+      if (!bets || bets.length === 0) {
+        container.innerHTML = '<div class="no-bets">No bets found</div>';
+        return;
+      }
+
+      container.innerHTML = bets.map(bet => {
+        const statusClass = bet.status.toLowerCase();
+        const profitClass = bet.realized_profit > 0 ? 'positive' : bet.realized_profit < 0 ? 'negative' : 'neutral';
+        const profitSign = bet.realized_profit > 0 ? '+' : '';
+        
+        return `
+          <div class="bet-card ${statusClass}">
+            <div class="bet-card-header">
+              <span class="bet-status ${statusClass}">${bet.status}</span>
+              <span class="bet-date">${bet.date}</span>
+            </div>
+            <div class="bet-type">${bet.type}</div>
+            <div class="bet-amounts">
+              <div class="bet-amount-row">
+                <span class="bet-amount-label">Stake</span>
+                <span class="bet-amount-value">₦${bet.amount.toLocaleString()}</span>
+              </div>
+              <div class="bet-amount-row">
+                <span class="bet-amount-label">Payout</span>
+                <span class="bet-amount-value">₦${bet.payout.toLocaleString()}</span>
+              </div>
+            </div>
+            <div class="bet-profit ${profitClass}">
+              <span>P&L</span>
+              <span>${profitSign}₦${bet.realized_profit.toLocaleString()}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    window.onload = async () => {
+      await loadUsername();
+      bets = await load();
+      if (bets?.length) render(bets.filter(b => parse(b.date) >= new Date(Date.now() - 30 * 86400000)));
+    };
+
+    document.querySelectorAll('.btn:not(#sync)').forEach(b => {
+      b.onclick = function() {
+        if (working) return;
+        document.querySelectorAll('.btn:not(#sync)').forEach(x => x.classList.remove('active'));
+        this.classList.add('active');
+        filter = parseInt(this.dataset.d);
+        const cut = new Date(Date.now() - filter * 86400000);
+        render(bets.filter(x => parse(x.date) >= cut));
+      };
+    });
+
+    // const dotsBtn = document.getElementById('dots');
+    // if (dotsBtn) {
+    //   dotsBtn.onclick = () => {
+    //     showDots = !showDots;
+    //     dotsBtn.classList.toggle('active');
+    //     const cut = new Date(Date.now() - filter * 86400000);
+    //     render(bets.filter(b => parse(b.date) >= cut));
+    //   };
+    // }
+
+    document.getElementById('sync').onclick = async function() {
+      if (working) return;
+      const id = localStorage.getItem('user_id');
+      const msg = document.getElementById('status');
+      if (!id) return alert('No user_id');
+
+      working = true;
+      this.disabled = true;
+      msg.style.display = 'block';
+      msg.classList.remove('error');
+      msg.textContent = 'Syncing...';
+
+      try {
+        const r = await fetch(`http://127.0.0.1:8000/scrape/${id}`);
+        const d = await r.json();
+        if (r.ok) {
+          msg.textContent = '✓ Synced!';
+          setTimeout(() => location.reload(), 1500);
+        } else {
+          msg.textContent = '✗ Failed';
+          msg.classList.add('error');
+          this.disabled = false;
+          working = false;
+        }
+      } catch (e) {
+        msg.textContent = '✗ Error';
+        msg.classList.add('error');
+        this.disabled = false;
+        working = false;
+      }
+    };
+
+    document.getElementById("user-acct").onclick = () => {
+      window.location.href = "user_settings.html";
+    }
+
+    document.getElementById("dashboard-btn").onclick = () => {
+      window.location.href = "dashboard.html";
+    }
+    
+  </script>
+</body>
+</html>
