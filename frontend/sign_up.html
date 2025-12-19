@@ -318,8 +318,12 @@
     console.log(result);  
 
     if (response.ok) {
-      // Store user_id in memory instead of localStorage
-      window.userId = result.user_id;
+      //store userid in local storage
+      if (response.ok) {
+        localStorage.setItem("user_id", result.user_id);  // ✅ CORRECT
+        alert(result.message);
+        window.location.href = "sporty_details.html";
+      }
       alert(result.message);
 
       window.location.href = "sporty_details.html";
