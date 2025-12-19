@@ -307,7 +307,7 @@
       console.log("User ID:", result.user_id);
       
       // Store user_id in memory instead of localStorage
-      window.userId = result.user_id;
+      localStorage.setItem('user_id', result.user_id);
 
       // Check if Sporty details exist
       if (result.has_sporty_details) {
