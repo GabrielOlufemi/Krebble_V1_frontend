@@ -299,7 +299,7 @@
 
       if (response.ok) {
         localStorage.setItem('user_id', result.user_id);
-        window.location.href = result.has_sporty_details ? "dashboard.html" : "sporty_details.html";
+        window.location.href = result.has_sporty_details ? "landing.html" : "sporty_details.html";
       } else {
         alert(result.detail || "Sign in failed");
         submitBtn.disabled = false;

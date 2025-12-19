@@ -344,7 +344,7 @@
       const result = await response.json();
 
       if (response.ok) {
-        window.location.href = "dashboard.html";
+        window.location.href = "landing.html";
       } else {
         alert(result.detail || "Failed to verify details");
         submitBtn.disabled = false;
