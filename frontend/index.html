@@ -19,8 +19,8 @@
 
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-      background: linear-gradient(135deg, #f1f5f8, #36281f9c);
-      height: 100vh;
+      background: #06080b;       
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -28,21 +28,37 @@
     }
 
     .viewscreen_display {
-      display:flex;
+      display: flex;
       flex-direction: column;
       justify-content: space-between;
+      width: 100%;
+      max-width: 380px;
+      gap: 16px;
     }
 
     .sign_in_panel_container {
-      background: #fff;
+      background: #000000;
+      border: 1px solid #6c6b6b6f;
+      color: #e0e0e0;
+      box-shadow: 0px 0px 100px #6c6b6b6f;      
       padding: 40px 30px;
       border-radius: 15px;
-      width: 380px;
-      max-width: 100%;
-      box-shadow: 0 0px 40px rgba(0, 0, 0, 0.4);
+      width: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    /* Mobile responsive adjustments */
+    @media (max-width: 480px) {
+      body {
+        padding: 16px;
+      }
+
+      .sign_in_panel_container {
+        padding: 32px 24px;
+      }
     }
 
     .logo_panel {
@@ -55,17 +71,11 @@
       margin-bottom: 16px;
     }
 
-    /* .logo_panel img{
-      width: 30px;
-      height: 30px;
-      margin-right: 5px;
-    } */
-
     .logo_panel div{
-      color: #36281f;
+      color: #e0e0e0;
       opacity: 0.9;
       font-family: 'Caprasimo', cursive;   /* main font */
-      font-size:30px;
+      font-size: 30px;
     }
 
     .sign_in_panel_header {
@@ -76,7 +86,7 @@
 
     .sign_in_panel_header h1 {
       font-size: 28px;
-      color: #36281f;  
+      color: #e0e0e0;
       opacity: 0.9;
       margin-bottom: 8px;
     }
@@ -92,20 +102,20 @@
     }
 
     .sign_up_wrapper a{
-      margin-left:7px;
+      margin-left: 7px;
       opacity: 0.7;
-      color: #36281f;      
+      color: #e0e0e0;
       font-weight: bold;
       text-decoration: none;
     }
 
     .sign_up_wrapper a:hover{
       cursor: pointer;
-      opacity:0.9;
+      opacity: 0.9;
     }
 
     .sign_in_form {
-      min-width:270px;
+      min-width: 270px;
       display: flex;
       flex-direction: column;
       gap: 20px;
@@ -120,42 +130,46 @@
     .form_group label {
       margin-bottom: 6px;
       font-size: 14px;
-      color: #36281f;  
+      color: #e0e0e0;
       opacity: 0.9;
       font-weight: 500;
     }
 
     .form_group input {
+      width: 100%;
       padding: 10px 0px;
       border: none;
       border-bottom: 2px solid gray;
-      outline:none;
-      font-size: 15px;
+      background-color: #000000;
       outline: none;
+      font-size: 15px;
       transition: border-color 0.3s ease;
     }
 
     .form_group input:focus {
+      color: white;
       box-shadow: none;
-      border-bottom-color: black;
+      border-bottom-color:#e0e0e0;
+;
     }
 
     .sign_in_btn {
-      background: #36281f;
-      color: white;
+      width: 100%;
+      background: #e0e0e0;
+      color: #000000;
       border: none;
-      margin-top:4px;
+      margin-top: 4px;
       padding: 12px;
       border-radius: 7px;
       font-weight: 600;
       font-size: 15px;
       cursor: pointer;
-      transition:all 0.2s ease;
+      transition: all 0.2s ease;
     }
 
     .sign_in_btn:hover {
       opacity: 0.9;
-      background-color:#36281f;
+      background-color: #c1c1c1;
     }
 
     .forgot_password {
@@ -170,11 +184,11 @@
       color: gray;
       text-decoration: none;
       transition: color 0.2s ease;
+      cursor: pointer;
     }
 
     .forgot_password a:hover {
       color: black;
-      cursor: pointer;
     }
 
     .creator_link {
@@ -192,8 +206,8 @@
     }
 
     .creator_link a:hover {
-      color:black;
-      cursor:pointer;
+      color: black;
+      cursor: pointer;
     }
 
   </style>
@@ -202,20 +216,20 @@
   
 <!-- Main container -->
  
-<div class = "viewscreen_display">
+<div class="viewscreen_display">
 
   <div class="sign_in_panel_container">
 
-    <div class = "logo_panel">
+    <div class="logo_panel">
       <div>Krebble.</div>
     </div>
 
     <div class="sign_in_panel_header">
       <h1>Welcome Back!</h1>
       <div>Sign in to access your dashboard</div>
-        <div class = "sign_up_wrapper">
+        <div class="sign_up_wrapper">
           <div>Don't have an account?</div>
-          <a href = "sign_up.html">Sign Up</a>
+          <a href="sign_up.html">Sign Up</a>
         </div>
     </div>
 
@@ -241,7 +255,7 @@
 
       </form>
 
-      <div class = "forgot_password">
+      <div class="forgot_password">
         <a>Forgot Password?</a>
       </div>
 
@@ -249,8 +263,8 @@
 
   </div>
 
-  <div class = "creator_link">
-    <a href="https://x.com/maybeeGabriel" target = "_blank" rel = "noopener">@maybeeGabriel</a>
+  <div class="creator_link">
+    <a href="https://x.com/maybeeGabriel" target="_blank" rel="noopener">@maybeeGabriel</a>
   </div>
 
 </div>
@@ -287,7 +301,9 @@
     if (response.ok) {
       // Sign in successful
       console.log("User ID:", result.user_id);
-      localStorage.setItem("user_id", result.user_id);
+      
+      // Store user_id in memory instead of localStorage
+      window.userId = result.user_id;
 
       // Check if Sporty details exist
       if (result.has_sporty_details) {
