@@ -284,52 +284,51 @@
 <!-- PREVENT RELOAD LOGIC (JS) & push form details to backend.-->
 <script>
   const form = document.querySelector(".sign_up_form");
+  const submitBtn = form.querySelector(".sign_up_btn");
+  
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    // remeber # for ids and . for classnames
+    // Disable button and show loading
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Creating Account...";
+    submitBtn.style.opacity = "0.6";
+    submitBtn.style.cursor = "not-allowed";
+
     const username = document.querySelector("#username").value;
     const email = document.querySelector("#email").value;
     const password = document.querySelector("#password").value;
     const confirmPassword = document.querySelector("#confirmPassword").value;
 
-    // logging for now
-    console.log("Username: ", username);
-    console.log("email: ", email);
-    console.log("password: ", password);
-    console.log("confirmed password: ", confirmPassword);
+    try {
+      const response = await fetch("https://krebble-v1.onrender.com/sign-up", {
+        method: "POST", 
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, email, password, confirmPassword })
+      });
 
-    // posting form details to signup method
-    const response = await fetch("https://krebble-v1.onrender.com/sign-up", {
-      method: "POST", 
-      headers: {
-        "Content-Type": "application/json",
-      },
+      const result = await response.json();
 
-      body: JSON.stringify({
-        username,
-        email,
-        password,
-        confirmPassword,
-      }),
-    });
-
-    const result = await response.json();
-    console.log(result);  
-
-    if (response.ok) {
-      //store userid in local storage
       if (response.ok) {
-        localStorage.setItem("user_id", result.user_id);  // ✅ CORRECT
+        localStorage.setItem("user_id", result.user_id);
         alert(result.message);
         window.location.href = "sporty_details.html";
+      } else {
+        alert(result.detail || "Sign up failed");
+        // Re-enable button on error
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Get Started";
+        submitBtn.style.opacity = "1";
+        submitBtn.style.cursor = "pointer";
       }
-      alert(result.message);
-
-      window.location.href = "sporty_details.html";
+    } catch (error) {
+      alert("Network error. Please try again.");
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Get Started";
+      submitBtn.style.opacity = "1";
+      submitBtn.style.cursor = "pointer";
     }
-  })
-
+  });
 </script>
 
 </body>

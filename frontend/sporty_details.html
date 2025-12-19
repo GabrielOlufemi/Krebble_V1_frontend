@@ -299,26 +299,23 @@
 
 <script>
   const form = document.querySelector(".sporty_details_form");
-  form.addEventListener("submit", handleBetDetails)
+  const submitBtn = form.querySelector(".details_btn");
 
-  async function handleBetDetails(event){
+  form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    let phone_number = document.querySelector("#phone_number").value
-    const sporty_password = document.querySelector("#password").value
+    let phone_number = document.querySelector("#phone_number").value;
+    const sporty_password = document.querySelector("#password").value;
 
-    // VALIDATION: Phone number must contain only digits
     if (!/^\d+$/.test(phone_number)) {
       alert("Phone number must contain only numbers");
       return;
     }
 
-    // VALIDATION: If starts with 0, remove it (expecting 10 digits after)
     if (phone_number.startsWith('0')) {
       phone_number = phone_number.substring(1);
     }
 
-    // VALIDATION: Phone number must be exactly 10 digits after processing
     if (phone_number.length !== 10) {
       alert("Phone number must be 10 digits (or 11 if it starts with 0)");
       return;
@@ -328,36 +325,41 @@
 
     if (!userId) {
       alert("Session expired. Please sign up again.");
-      window.location.href = "signup.html";
+      window.location.href = "sign_up.html";
       return;
     }
-    
-    const response = await fetch("https://krebble-v1.onrender.com/register-sporty-details/" + userId, {
-      method : "POST",
-      headers : {
-        "Content-Type" : "application/json"
-      },
-      body : JSON.stringify({
-        phone_number,
-        sporty_password
-      })
-    });
 
-    const result = await response.json();
-    console.log(result);
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Verifying...";
+    submitBtn.style.opacity = "0.6";
+    submitBtn.style.cursor = "not-allowed";
 
-    if (response.ok) {
-      console.log("User ID:", userId);
-      console.log("message", result.message)
-      console.log("modified_users", result.modified)
+    try {
+      const response = await fetch(`https://krebble-v1.onrender.com/register-sporty-details/${userId}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone_number, sporty_password })
+      });
 
-      //redirect to dashboard
-      window.location.href = "dashboard.html"
+      const result = await response.json();
 
-    } else {
-      alert(result.detail || "")
+      if (response.ok) {
+        window.location.href = "dashboard.html";
+      } else {
+        alert(result.detail || "Failed to verify details");
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Proceed";
+        submitBtn.style.opacity = "1";
+        submitBtn.style.cursor = "pointer";
+      }
+    } catch (error) {
+      alert("Network error. Please try again.");
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Proceed";
+      submitBtn.style.opacity = "1";
+      submitBtn.style.cursor = "pointer";
     }
-  }
+  });
 </script>
 
 </body>
