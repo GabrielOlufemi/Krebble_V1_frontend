@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Log In</title>
+  <title>Sign In</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -138,19 +138,23 @@
     .form_group input {
       width: 100%;
       padding: 10px 0px;
+      color: #e0e0e0;
       border: none;
       border-bottom: 2px solid gray;
       background-color: #000000;
       outline: none;
       font-size: 15px;
       transition: border-color 0.3s ease;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      border-radius: 0;
     }
 
     .form_group input:focus {
       color: white;
       box-shadow: none;
-      border-bottom-color:#e0e0e0;
-;
+      border-bottom-color: #e0e0e0;
     }
 
     .sign_in_btn {
@@ -188,7 +192,7 @@
     }
 
     .forgot_password a:hover {
-      color: black;
+      color: #e0e0e0;
     }
 
     .creator_link {
@@ -206,7 +210,7 @@
     }
 
     .creator_link a:hover {
-      color: black;
+      color: #999;
       cursor: pointer;
     }
 
