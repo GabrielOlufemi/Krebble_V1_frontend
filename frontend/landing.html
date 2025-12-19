@@ -187,6 +187,77 @@
 
   <script>
     let working = false;
+    let pollInterval = null;
+
+    // Check scrape status on page load
+    async function checkScrapeStatus() {
+      const id = localStorage.getItem('user_id');
+      if (!id) return;
+
+      try {
+        const r = await fetch(`https://krebble-v1.onrender.com/scrape/status/${id}`);
+        const d = await r.json();
+        
+        if (d.is_scraping) {
+          // Scrape is in progress
+          setLoadingState();
+          startPolling();
+        }
+      } catch (e) {
+        console.error('Error checking scrape status:', e);
+      }
+    }
+
+    function setLoadingState() {
+      const btn = document.getElementById('scrape-btn');
+      const msg = document.getElementById('status');
+      
+      working = true;
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span>Syncing...';
+      msg.style.display = 'block';
+      msg.classList.remove('error');
+      msg.textContent = 'Fetching your bet data...';
+    }
+
+    function startPolling() {
+      if (pollInterval) return;
+      
+      pollInterval = setInterval(async () => {
+        const id = localStorage.getItem('user_id');
+        if (!id) {
+          stopPolling();
+          return;
+        }
+
+        try {
+          const r = await fetch(`https://krebble-v1.onrender.com/scrape/status/${id}`);
+          const d = await r.json();
+          
+          if (!d.is_scraping) {
+            // Scrape completed
+            stopPolling();
+            const msg = document.getElementById('status');
+            const btn = document.getElementById('scrape-btn');
+            
+            msg.textContent = '✓ Synced!';
+            btn.textContent = 'Success';
+            setTimeout(() => {
+              window.location.href = "dashboard.html";
+            }, 1500);
+          }
+        } catch (e) {
+          console.error('Polling error:', e);
+        }
+      }, 5000); // Poll every 5 seconds
+    }
+
+    function stopPolling() {
+      if (pollInterval) {
+        clearInterval(pollInterval);
+        pollInterval = null;
+      }
+    }
 
     document.getElementById('scrape-btn').onclick = async function() {
       if (working) return;
@@ -200,25 +271,21 @@
         return;
       }
 
-      working = true;
-      btn.disabled = true;
-      btn.innerHTML = '<span class="spinner"></span>Syncing...';
-      msg.style.display = 'block';
-      msg.classList.remove('error');
-      msg.textContent = 'Fetching your bet data...';
+      setLoadingState();
 
       try {
         const r = await fetch(`https://krebble-v1.onrender.com/scrape/${id}`);
         const d = await r.json();
         
-        if (r.ok) {
-          msg.textContent = '✓ Synced!';
-          btn.textContent = 'Success';
-          setTimeout(() => {
-            window.location.href = "dashboard.html";
-          }, 1500);
+        if (d.status === 'in_progress') {
+          // Already scraping
+          startPolling();
+        } else if (d.status === 'success' || r.ok) {
+          // Scrape started or completed immediately
+          startPolling();
         } else {
-          msg.textContent = '✗ Failed';
+          // Failed
+          msg.textContent = '✗ ' + (d.message || 'Failed');
           msg.classList.add('error');
           btn.disabled = false;
           btn.textContent = 'Scrape';
@@ -232,6 +299,14 @@
         working = false;
       }
     };
+
+    // Check status when page loads
+    checkScrapeStatus();
+
+    // Clean up polling on page unload
+    window.addEventListener('beforeunload', () => {
+      stopPolling();
+    });
   </script>
 </body>
 </html>
