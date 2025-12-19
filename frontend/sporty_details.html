@@ -344,7 +344,15 @@
       const result = await response.json();
 
       if (response.ok) {
-        window.location.href = "landing.html";
+        // Check if user has any bet data
+        const betsCheck = await fetch(`https://krebble-v1.onrender.com/check-bets/${userId}`);
+        const betsData = await betsCheck.json();
+
+        if (betsData.has_bets) {
+          window.location.href = "dashboard.html";
+        } else {
+          window.location.href = "landing.html";
+        }
       } else {
         alert(result.detail || "Failed to verify details");
         submitBtn.disabled = false;

@@ -299,7 +299,22 @@
 
       if (response.ok) {
         localStorage.setItem('user_id', result.user_id);
-        window.location.href = result.has_sporty_details ? "landing.html" : "sporty_details.html";
+        
+        // Check if user has sporty details
+        if (!result.has_sporty_details) {
+          window.location.href = "sporty_details.html";
+          return;
+        }
+
+        // Check if user has any bet data
+        const betsCheck = await fetch(`https://krebble-v1.onrender.com/check-bets/${result.user_id}`);
+        const betsData = await betsCheck.json();
+
+        if (betsData.has_bets) {
+          window.location.href = "dashboard.html";
+        } else {
+          window.location.href = "landing.html";
+        }
       } else {
         alert(result.detail || "Sign in failed");
         submitBtn.disabled = false;
