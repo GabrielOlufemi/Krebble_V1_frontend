@@ -883,37 +883,37 @@
     //   };
     // }
 
-    document.getElementById('sync').onclick = async function() {
-      if (working) return;
-      const id = localStorage.getItem('user_id');
-      const msg = document.getElementById('status');
-      if (!id) return alert('No user_id');
+    // document.getElementById('sync').onclick = async function() {
+    //   if (working) return;
+    //   const id = localStorage.getItem('user_id');
+    //   const msg = document.getElementById('status');
+    //   if (!id) return alert('No user_id');
 
-      working = true;
-      this.disabled = true;
-      msg.style.display = 'block';
-      msg.classList.remove('error');
-      msg.textContent = 'Syncing...';
+    //   working = true;
+    //   this.disabled = true;
+    //   msg.style.display = 'block';
+    //   msg.classList.remove('error');
+    //   msg.textContent = 'Syncing...';
 
-      try {
-        const r = await fetch(`https://krebble-v1.onrender.com/scrape/${id}`);
-        const d = await r.json();
-        if (r.ok) {
-          msg.textContent = '✓ Synced!';
-          setTimeout(() => location.reload(), 1500);
-        } else {
-          msg.textContent = '✗ Failed';
-          msg.classList.add('error');
-          this.disabled = false;
-          working = false;
-        }
-      } catch (e) {
-        msg.textContent = '✗ Error';
-        msg.classList.add('error');
-        this.disabled = false;
-        working = false;
-      }
-    };
+    //   try {
+    //     const r = await fetch(`https://krebble-v1.onrender.com/scrape/${id}`);
+    //     const d = await r.json();
+    //     if (r.ok) {
+    //       msg.textContent = '✓ Synced!';
+    //       setTimeout(() => location.reload(), 1500);
+    //     } else {
+    //       msg.textContent = '✗ Failed';
+    //       msg.classList.add('error');
+    //       this.disabled = false;
+    //       working = false;
+    //     }
+    //   } catch (e) {
+    //     msg.textContent = '✗ Error';
+    //     msg.classList.add('error');
+    //     this.disabled = false;
+    //     working = false;
+    //   }
+    // };
 
     document.getElementById("user-acct").onclick = () => {
       window.location.href = "user_settings.html";
