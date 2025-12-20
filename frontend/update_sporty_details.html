@@ -45,7 +45,6 @@
       box-shadow: 0px 0px 100px #6c6b6b6f;
     }
 
-
     .navbar {
       display: flex;
       align-items: center;
@@ -178,7 +177,7 @@
       margin-top: 8px;
     }
 
-    .submit-btn:hover {
+    .submit-btn:hover:not(:disabled) {
       background: #4a3629;
     }
 
@@ -186,12 +185,49 @@
       background: #296633;
     }
 
-    body.dark .submit-btn:hover {
+    body.dark .submit-btn:hover:not(:disabled) {
       background: #247f33;
     }
 
-    .submit-btn:active {
+    .submit-btn:active:not(:disabled) {
       transform: scale(0.98);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .status {
+      display: none;
+      color: #10b981;
+      font-size: 14px;
+      padding: 12px 16px;
+      background: rgba(16, 185, 129, 0.1);
+      border-radius: 6px;
+      margin-top: 16px;
+      text-align: center;
+    }
+
+    .status.error {
+      color: #ef4444;
+      background: rgba(239, 68, 68, 0.1);
     }
 
     @media (max-width: 768px) {
@@ -226,7 +262,7 @@
 
         <div class="page-header">
           <div class="page-title">Update Sporty Details</div>
-          <div class="page-subtitle" id="username-subtitle">@maybeeSaint</div>
+          <div class="page-subtitle" id="username-subtitle">Loading...</div>
         </div>
       </div>    
       
@@ -234,12 +270,12 @@
 
         <div class="form-group">
           <label class="form-label">New password</label>
-          <input  type="password" class="form-input" id="new-sporty-password" placeholder="input new password">
+          <input type="password" class="form-input" id="new-sporty-password" placeholder="input new password">
         </div>
 
         <div class="form-group">
           <label class="form-label">Confirm password</label>
-          <input  class="form-input" id="confirm-sporty-password" placeholder="confirm updated password">
+          <input type="password" class="form-input" id="confirm-sporty-password" placeholder="confirm updated password">
         </div>
 
         <div class="form-group">
@@ -253,12 +289,16 @@
         </div>
 
         <button class="submit-btn" id="submit-btn">Update Details</button>
+        
+        <div id="status" class="status">Updating...</div>
       </div>
         
     </div>
   </div>
 
   <script>
+    let working = false;
+
     // ===================== THEME HANDLING =====================
     
     function getUserId() {
@@ -317,10 +357,11 @@
 
     // ===================== FORM SUBMISSION =====================
     
-    document.getElementById("submit-btn").onclick = async () => {
+    document.getElementById("submit-btn").onclick = async function() {
+      if (working) return;
+
       const newSportyPassword = document.getElementById('new-sporty-password').value;
       const confirmSportyPassword = document.getElementById('confirm-sporty-password').value;
-     
       const newPhoneNo = document.getElementById('new-phone-no').value;
       const confirmPhoneNo = document.getElementById('confirm-phone-no').value;
 
@@ -340,12 +381,23 @@
         return;
       }
 
-      //PHONE NUMBER FORMAT VALIDATION
-      const phoneRegex = /^0\d{10}$/; // Starts with 0, followed by exactly 10 digits
+      // PHONE NUMBER FORMAT VALIDATION
+      const phoneRegex = /^0\d{10}$/;
       if (!phoneRegex.test(newPhoneNo)) {
         alert('Please enter a valid 11-digit phone number starting with 0 (e.g., 09060000000)');
         return;
       }
+
+      // UI UPDATES - START LOADING
+      const btn = this;
+      const msg = document.getElementById('status');
+      
+      working = true;
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span>Updating...';
+      msg.style.display = 'block';
+      msg.classList.remove('error');
+      msg.textContent = 'Verifying new credentials with Sportybet...';
 
       // SEND TO BACKEND
       try {
@@ -364,14 +416,26 @@
         const result = await response.json();
 
         if (response.ok) {
-          alert('Sporty details updated successfully!');
-          window.location.href = "dashboard.html";
+          msg.textContent = '✓ Sporty details updated successfully!';
+          btn.textContent = 'Success';
+          setTimeout(() => {
+            window.location.href = "dashboard.html";
+          }, 1500);
         } else {
-          alert(result.detail || 'Failed to update details');
+          // Handle error
+          msg.textContent = '✗ ' + (result.detail || 'Failed to update details');
+          msg.classList.add('error');
+          btn.disabled = false;
+          btn.textContent = 'Update Details';
+          working = false;
         }
       } catch (error) {
         console.error('Error:', error);
-        alert('Error updating sporty details');
+        msg.textContent = '✗ Network error - please try again';
+        msg.classList.add('error');
+        btn.disabled = false;
+        btn.textContent = 'Update Details';
+        working = false;
       }
     };
   </script>
