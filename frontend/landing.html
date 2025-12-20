@@ -211,21 +211,39 @@
         const r = await fetch(`https://krebble-v1.onrender.com/scrape/${id}`);
         const d = await r.json();
         
-        if (r.ok) {
-          msg.textContent = '✓ Synced!';
+        // Check for success using both HTTP status AND the status field in response
+        if (r.ok && d.status === "success") {
+          msg.textContent = '✓ Synced successfully!';
           btn.textContent = 'Success';
           setTimeout(() => {
             window.location.href = "dashboard.html";
           }, 1500);
+        } else if (!r.ok) {
+          // HTTP error (400, 500, etc.)
+          const errorMsg = d.detail?.message || d.message || 'Scraping failed';
+          msg.textContent = '✗ ' + errorMsg;
+          msg.classList.add('error');
+          btn.disabled = false;
+          btn.textContent = 'Scrape';
+          working = false;
+        } else if (d.status === "failed") {
+          // HTTP 200 but status field says "failed"
+          msg.textContent = '✗ ' + (d.message || 'Scraping failed');
+          msg.classList.add('error');
+          btn.disabled = false;
+          btn.textContent = 'Scrape';
+          working = false;
         } else {
-          msg.textContent = '✗ Failed';
+          // Unexpected response
+          msg.textContent = '✗ Unexpected error occurred';
           msg.classList.add('error');
           btn.disabled = false;
           btn.textContent = 'Scrape';
           working = false;
         }
       } catch (e) {
-        msg.textContent = '✗ Error';
+        console.error('Scrape error:', e);
+        msg.textContent = '✗ Network error - please try again';
         msg.classList.add('error');
         btn.disabled = false;
         btn.textContent = 'Scrape';
