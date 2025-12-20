@@ -9,9 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
  
-
  <style>
-    /* Reset some default browser styles */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -20,7 +18,7 @@
 
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-      background: linear-gradient(135deg, #f1f5f8, #e8ddd0);
+      background: #06080b;
       min-height: 100vh;
       display: flex;
       justify-content: center;
@@ -52,7 +50,6 @@
       align-items: center;
     }
 
-    /* Mobile responsive adjustments */
     @media (max-width: 480px) {
       body {
         padding: 16px;
@@ -86,7 +83,6 @@
       outline: none;
       font-size: 15px;
       transition: border-color 0.3s ease;
-      /* iOS Safari fixes */
       -webkit-appearance: none;
       -moz-appearance: none;
       appearance: none;
@@ -111,7 +107,7 @@
     .logo_panel div{
       color: #e0e0e0;
       opacity: 0.9;
-      font-family: 'Caprasimo', cursive;   /* main font */
+      font-family: 'Caprasimo', cursive;
       font-size:30px;
     }
 
@@ -149,6 +145,7 @@
       flex-direction: column;
       text-align: left;
       min-width: 270px;
+      position: relative;
     }
 
     .form_group label {
@@ -159,8 +156,15 @@
       font-weight: 500;
     }
 
+    .password-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
     .form_group input {
       padding: 10px 0px;
+      padding-right: 40px;
       border: none;
       color: #e0e0e0;
       background-color: #000000;
@@ -169,17 +173,42 @@
       font-size: 15px;
       outline: none;
       transition: border-color 0.3s ease;
-      /* iOS Safari fixes */
       -webkit-appearance: none;
       -moz-appearance: none;
       appearance: none;
       border-radius: 0;
+      width: 100%;
     }
 
     .form_group input:focus {
       color: white;
       box-shadow: none;
       border-bottom-color: #e0e0e0;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #666;
+      cursor: pointer;
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s;
+    }
+
+    .toggle-password:hover {
+      color: #e0e0e0;
+    }
+
+    .toggle-password svg {
+      width: 20px;
+      height: 20px;
     }
 
     .details_btn {
@@ -240,7 +269,7 @@
     }
 
     .creator_link a:hover {
-      color:black;
+      color: #999;
       cursor:pointer;
     }
 
@@ -248,13 +277,11 @@
 </head>
 <body>
   
-<!-- Main container -->
- 
-<div class = "viewscreen_display">
+<div class="viewscreen_display">
 
   <div class="details_panel_container">
 
-    <div class = "logo_panel">
+    <div class="logo_panel">
       <div>Krebble.</div>
     </div>
 
@@ -267,10 +294,8 @@
 
     <div class="details_panel">
       
-      <!-- details form -->
       <form action="#" method="post" class="sporty_details_form details_form">
         
-        <!-- Phone Number -->
         <div class="form_group">
           <label for="phone_number">Phone Number</label>
           <div class="phone_number_wrapper">
@@ -279,13 +304,19 @@
           </div>
         </div>
 
-        <!-- Password -->
         <div class="form_group">
           <label for="password">Password</label>
-          <input type="password" id="password" name="password" placeholder="Enter your password" required>
+          <div class="password-wrapper">
+            <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            <button type="button" class="toggle-password" id="toggle-password">
+              <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
         </div>
 
-        <!-- Submit button -->
         <button type="submit" class="details_btn">Proceed</button>
 
       </form>
@@ -293,13 +324,33 @@
 
   </div>
 
-  <div class = "creator_link">
-    <a href="https://x.com/maybeeGabriel" target = "_blank" rel = "noopener">@maybeeGabriel</a>
+  <div class="creator_link">
+    <a href="https://x.com/maybeeGabriel" target="_blank" rel="noopener">@maybeeGabriel</a>
   </div>
 
 </div>
 
 <script>
+  // Password toggle functionality
+  const togglePassword = document.getElementById('toggle-password');
+  const passwordInput = document.getElementById('password');
+
+  togglePassword.addEventListener('click', function() {
+    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordInput.setAttribute('type', type);
+    
+    this.innerHTML = type === 'password' 
+      ? `<svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+           <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+           <circle cx="12" cy="12" r="3"></circle>
+         </svg>`
+      : `<svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+           <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+           <line x1="1" y1="1" x2="23" y2="23"></line>
+         </svg>`;
+  });
+
+  // Form submission
   const form = document.querySelector(".sporty_details_form");
   const submitBtn = form.querySelector(".details_btn");
 
@@ -307,7 +358,7 @@
     event.preventDefault();
 
     let phone_number = document.querySelector("#phone_number").value;
-    const sporty_password = document.querySelector("#password").value;
+    const sporty_password = passwordInput.value;
 
     if (!/^\d+$/.test(phone_number)) {
       alert("Phone number must contain only numbers");
@@ -346,7 +397,6 @@
       const result = await response.json();
 
       if (response.ok) {
-        // Check if user has any bet data
         const betsCheck = await fetch(`https://krebble-v1.onrender.com/check-bets/${userId}`);
         const betsData = await betsCheck.json();
 
